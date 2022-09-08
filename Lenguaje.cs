@@ -270,15 +270,19 @@ namespace Evalua
         //Incremento -> Identificador ++ | --
         private void Incremento()
         {
+            string variable = getContenido();
+
             //Requerimiento 2.- Si no existe la variable levanta la excepcion
             match(Tipos.Identificador);
             if(getContenido() == "+")
             {
                 match("++");
+                modVariable(variable, getValor(variable)+1);
             }
             else
             {
                 match("--");
+                modVariable(variable, getValor(variable)-1);
             }
         }
 
@@ -288,6 +292,7 @@ namespace Evalua
             match("switch");
             match("(");
             Expresion();
+            stack.Pop();
             match(")");
             match("{");
             ListaDeCasos();
@@ -312,6 +317,7 @@ namespace Evalua
         {
             match("case");
             Expresion();
+            stack.Pop();
             match(":");
             ListaInstruccionesCase();
             if(getContenido() == "break")
@@ -329,6 +335,7 @@ namespace Evalua
         private void Condicion()
         {
             Expresion();
+            stack.Pop();
             match(Tipos.OperadorRelacional);
             Expresion();
         }
@@ -380,7 +387,7 @@ namespace Evalua
             match(";");
         }
 
-        //Scanf -> scanf(cadena);
+        //Scanf -> scanf(cadena, &identificador);
         private void Scanf()    
         {
             match("scanf");
