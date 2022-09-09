@@ -196,11 +196,18 @@ namespace Evalua
         //Asignacion -> identificador = cadena | Expresion;
         private void Asignacion()
         {
+            //guardamos el nombre de la variable
+            string nombre = getContenido();
+
+            if(existeVariable(nombre) == false){
+                throw new Error("Error: Variable inexistente "+getContenido()+" en la linea: "+linea, log);
+            }
+            match(Tipos.Identificador);
             //Requerimiento 2.- Si no existe la variable levanta la excepcion
             log.WriteLine();
             log.Write(getContenido()+" = ");
-            string nombre = getContenido();
-            match(Tipos.Identificador);
+
+            
             match(Tipos.Asignacion);
             Expresion();
             match(";");
@@ -274,6 +281,11 @@ namespace Evalua
             string variable = getContenido();
 
             //Requerimiento 2.- Si no existe la variable levanta la excepcion
+
+            if(existeVariable(variable) == false){
+                throw new Error("Error: Variable inexistente "+getContenido()+" en la linea: "+linea, log);
+            }
+
             match(Tipos.Identificador);
             if(getContenido() == "+")
             {
@@ -376,6 +388,12 @@ namespace Evalua
             match("printf");
             match("(");
             if(getClasificacion() == Tipos.Cadena){
+                
+                //cambiamos las comillas por los datos correctos
+                setContenido(getContenido().Replace("\\t","     "));
+                setContenido(getContenido().Replace("\\n","\n"));
+                setContenido(getContenido().Replace("\"",string.Empty));
+                //escribe contenido
                 Console.Write(getContenido());
                 match(Tipos.Cadena);
             }else{

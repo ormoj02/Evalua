@@ -12,9 +12,6 @@ namespace Evalua
                 Lenguaje a = new Lenguaje();
 
                 a.Programa();
-
-
-                
                 /*a.match("#");
                 a.match("include");
                 a.match("<");
