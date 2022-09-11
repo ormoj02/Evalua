@@ -4,7 +4,7 @@ namespace Evalua
     {
         public enum TipoDato
         {
-            Char,Int,Float
+            Char, Int, Float
         }
         string nombre;
         float valor;

@@ -61,7 +61,7 @@ namespace Evalua
             linea = 1;
             string path = "C:\\Users\\ormoj\\Documents\\Semestre 5\\Lenguajes Y Automatas 2\\Proyectos\\Evalua\\prueba.cpp";
             bool existencia = File.Exists(path);
-            log = new StreamWriter("C:\\Users\\ormoj\\Documents\\Semestre 5\\Lenguajes Y Automatas 2\\Proyectos\\Evalua\\prueba.Log"); 
+            log = new StreamWriter("C:\\Users\\ormoj\\Documents\\Semestre 5\\Lenguajes Y Automatas 2\\Proyectos\\Evalua\\prueba.Log");
             log.AutoFlush = true;
             //log.WriteLine("Primer constructor");
             log.WriteLine("Archivo: prueba.cpp");
@@ -81,12 +81,12 @@ namespace Evalua
             linea = 1;
             //log = new streamWriter(nombre.log)
             //Usar el objeto path
-            
+
             string path2 = Path.ChangeExtension(nombre, ".log");
-            log = new StreamWriter(path2); 
+            log = new StreamWriter(path2);
             log.AutoFlush = true;
             //log.WriteLine("Segundo constructor");
-            log.WriteLine("Archivo: "+nombre);
+            log.WriteLine("Archivo: " + nombre);
             log.WriteLine(DateTime.Now);
             if (File.Exists(nombre))
             {
@@ -94,20 +94,20 @@ namespace Evalua
             }
             else
             {
-                throw new Error("Error: El archivo " +Path.GetFileName(path2)+ " no existe ", log);
+                throw new Error("Error: El archivo " + Path.GetFileName(path2) + " no existe ", log);
             }
         }
         public void cerrar()
         {
             archivo.Close();
             log.Close();
-        }       
+        }
 
         private void clasifica(int estado)
         {
-            switch(estado)
+            switch (estado)
             {
-                case 1: 
+                case 1:
                     setClasificacion(Tipos.Identificador);
                     break;
                 case 2:
@@ -150,7 +150,7 @@ namespace Evalua
                     break;
                 case 23:
                     setClasificacion(Tipos.IncrementoTermino);
-                    break;   
+                    break;
                 case 24:
                 case 29:
                     setClasificacion(Tipos.OperadorFactor);
@@ -164,129 +164,129 @@ namespace Evalua
                 case 28:
                     setClasificacion(Tipos.OperadorTernario);
                     break;
-            } 
+            }
         }
         private int columna(char c)
         {
             //WS,EF,EL,L, D, .,	E, +, -, =,	:, ;, &, |,	!, >, <, *,	%, /, ", ?,La
-            if(FinArchivo())
+            if (FinArchivo())
             {
                 return 1;
             }
-            else if(c == '\n')
+            else if (c == '\n')
             {
                 return 2;
             }
-            else if(char.IsWhiteSpace(c))
+            else if (char.IsWhiteSpace(c))
             {
                 return 0;
             }
-            else if(char.ToUpper(c) == 'E')
+            else if (char.ToUpper(c) == 'E')
             {
                 return 6;
             }
-            else if(char.IsLetter(c))
+            else if (char.IsLetter(c))
             {
                 return 3;
             }
-            else if(char.IsDigit(c))
+            else if (char.IsDigit(c))
             {
                 return 4;
             }
-            else if(c == '.')
+            else if (c == '.')
             {
                 return 5;
             }
-            else if(c == '+')
+            else if (c == '+')
             {
                 return 7;
             }
-            else if(c == '-')
+            else if (c == '-')
             {
                 return 8;
             }
-            else if(c == '=')
+            else if (c == '=')
             {
                 return 9;
             }
-            else if(c == ':')
+            else if (c == ':')
             {
                 return 10;
             }
-            else if(c == ';')
+            else if (c == ';')
             {
                 return 11;
             }
-            else if(c == '&')
+            else if (c == '&')
             {
                 return 12;
             }
-            else if(c == '|')
+            else if (c == '|')
             {
                 return 13;
             }
-            else if(c == '!')
+            else if (c == '!')
             {
                 return 14;
             }
-            else if(c == '>')
+            else if (c == '>')
             {
                 return 15;
             }
-            else if(c == '<')
+            else if (c == '<')
             {
                 return 16;
             }
-            else if(c == '*')
+            else if (c == '*')
             {
                 return 17;
             }
-            else if(c == '%')
+            else if (c == '%')
             {
                 return 18;
             }
-            else if(c == '/')
+            else if (c == '/')
             {
                 return 19;
             }
-            else if(c == '"')
+            else if (c == '"')
             {
                 return 20;
             }
-            else if(c == '?')
+            else if (c == '?')
             {
                 return 21;
             }
-            else if(c == 39)
+            else if (c == 39)
             {
                 return 23;
             }
-            else if(c == '#')
+            else if (c == '#')
             {
                 return 24;
             }
             return 22;
         }
         //WS,EF,EL,L, D, .,	E, +, -, =,	:, ;, &, |,	!, >, <, *,	%, /, ", ?,La, ', #
-        public void NextToken() 
+        public void NextToken()
         {
-            string buffer = "";           
-            char c;      
+            string buffer = "";
+            char c;
             int estado = 0;
 
-            while(estado >= 0)
+            while (estado >= 0)
             {
                 c = (char)archivo.Peek(); //Funcion de transicion
-                estado = TRAND[estado,columna(c)];
+                estado = TRAND[estado, columna(c)];
                 clasifica(estado);
                 if (estado >= 0)
                 {
                     archivo.Read();
-                    if(c == '\n')
+                    if (c == '\n')
                     {
                         linea++;
                     }
-                    if (estado >0)
+                    if (estado > 0)
                     {
                         buffer += c;
                     }
@@ -296,48 +296,48 @@ namespace Evalua
                     }
                 }
             }
-            setContenido(buffer); 
-            switch(buffer)
+            setContenido(buffer);
+            switch (buffer)
             {
                 case "char":
                 case "int":
                 case "float":
-                        setClasificacion(Tipos.TipoDato);
-                        break;
+                    setClasificacion(Tipos.TipoDato);
+                    break;
                 case "private":
                 case "protected":
                 case "public":
-                        setClasificacion(Tipos.Zona);
-                        break;
+                    setClasificacion(Tipos.Zona);
+                    break;
                 case "if":
                 case "else":
                 case "switch":
-                        setClasificacion(Tipos.Condicion);
-                        break;
+                    setClasificacion(Tipos.Condicion);
+                    break;
                 case "while":
                 case "for":
                 case "do":
-                        setClasificacion(Tipos.Ciclo);
-                        break;
+                    setClasificacion(Tipos.Ciclo);
+                    break;
             }
-            if(estado == E)
+            if (estado == E)
             {
                 //Requerimiento 9 agregar el numero de linea en el error
-                if (getContenido() [0] == '"')
+                if (getContenido()[0] == '"')
                 {
-                    throw new Error("Error lexico: No se cerro la cadena con \" en linea: "+linea, log);
+                    throw new Error("Error lexico: No se cerro la cadena con \" en linea: " + linea, log);
                 }
-                else if (getContenido() [0] == '\'')
+                else if (getContenido()[0] == '\'')
                 {
-                    throw new Error("Error lexico: No se cerro el caracter con ' en linea: "+linea, log);
+                    throw new Error("Error lexico: No se cerro el caracter con ' en linea: " + linea, log);
                 }
                 else if (getClasificacion() == Tipos.Numero)
                 {
-                    throw new Error("Error lexico: Se espera un digito en linea: "+linea, log);
+                    throw new Error("Error lexico: Se espera un digito en linea: " + linea, log);
                 }
                 else
                 {
-                    throw new Error("Error lexico: No definido en linea: "+linea, log);
+                    throw new Error("Error lexico: No definido en linea: " + linea, log);
                 }
             }
             else if (!FinArchivo())

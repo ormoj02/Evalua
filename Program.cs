@@ -19,16 +19,16 @@ namespace Evalua
                 a.match(".");
                 a.match("h");
                 a.match(">"); */
-                
+
                 //while(!a.FinArchivo())
                 //{
-                  //  a.NextToken();
+                //  a.NextToken();
                 //}
                 a.cerrar();
             }
             catch (Exception)
             {
-                
+
             }
         }
     }

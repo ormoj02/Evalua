@@ -6,10 +6,10 @@ namespace Evalua
         private Tipos Clasificacion;
         public enum Tipos
         {
-            Identificador,Numero,Caracter,Asignacion,Inicializacion,
-            OperadorLogico,OperadorRelacional,OperadorTernario,
-            OperadorTermino,OperadorFactor,IncrementoTermino,IncrementoFactor,
-            FinSentencia,Cadena,TipoDato,Zona,Condicion,Ciclo
+            Identificador, Numero, Caracter, Asignacion, Inicializacion,
+            OperadorLogico, OperadorRelacional, OperadorTernario,
+            OperadorTermino, OperadorFactor, IncrementoTermino, IncrementoFactor,
+            FinSentencia, Cadena, TipoDato, Zona, Condicion, Ciclo
         }
 
         public void setContenido(string contenido)
