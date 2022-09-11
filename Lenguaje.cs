@@ -12,6 +12,7 @@ namespace Evalua
 {
     public class Lenguaje : Sintaxis
     {
+        
         List <Variable> variables = new List<Variable>();
         Stack<float> stack = new Stack<float>();
 
@@ -55,7 +56,7 @@ namespace Evalua
 
         private void modVariable(string nombre, float nuevoValor){
             //Requerimiento 3.- Modificar el valor de la variable en la asignacion
-            foreach (var v in variables)
+            foreach (Variable v in variables)
             {
                 if (v.getNombre().Equals(nombre))
                 {
@@ -65,7 +66,7 @@ namespace Evalua
         }
 
         private float getValor(string nombreVariable){
-            foreach (var v in variables)
+            foreach (Variable v in variables)
             {
                 if (v.getNombre().Equals(nombreVariable))
                 {
