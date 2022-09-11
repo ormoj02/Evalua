@@ -7,6 +7,7 @@ using System.Collections.Generic;
 //Requerimiento 4.- Obtener el valor de la variable cuando se requiere y programar el metodo getValor();
 //Requerimiento 5.- Modificar el valor de la variable en el scanf   
 
+
 namespace Evalua
 {
     public class Lenguaje : Sintaxis
@@ -42,19 +43,36 @@ namespace Evalua
         {
             foreach (Variable v in variables)
             {
+                //si encuentra una variable con el mismo nombre en el List 
                 if (v.getNombre().Equals(nombre))
                 {
                     return true;
                 }
             }
+            
             return false;
         }
 
         private void modVariable(string nombre, float nuevoValor){
-
+            //Requerimiento 3.- Modificar el valor de la variable en la asignacion
+            foreach (var v in variables)
+            {
+                if (v.getNombre().Equals(nombre))
+                {
+                    v.setValor(nuevoValor);
+                }
+            }
         }
 
         private float getValor(string nombreVariable){
+            foreach (var v in variables)
+            {
+                if (v.getNombre().Equals(nombreVariable))
+                {
+                    return v.getValor();
+                }
+            }
+
             return 0;
         }
 
@@ -199,15 +217,15 @@ namespace Evalua
             //guardamos el nombre de la variable
             string nombre = getContenido();
 
-            if(existeVariable(nombre) == false){
+            if(!existeVariable(nombre)){
                 throw new Error("Error: Variable inexistente "+getContenido()+" en la linea: "+linea, log);
             }
+
             match(Tipos.Identificador);
             //Requerimiento 2.- Si no existe la variable levanta la excepcion
             log.WriteLine();
             log.Write(getContenido()+" = ");
 
-            
             match(Tipos.Asignacion);
             Expresion();
             match(";");
@@ -227,7 +245,7 @@ namespace Evalua
             match("(");
             Condicion();
             match(")");
-             if (getContenido() == "{") 
+            if (getContenido() == "{") 
             {
                 BloqueInstrucciones();
             }
@@ -279,15 +297,12 @@ namespace Evalua
         private void Incremento()
         {
             string variable = getContenido();
-
             //Requerimiento 2.- Si no existe la variable levanta la excepcion
-
             if(existeVariable(variable) == false){
                 throw new Error("Error: Variable inexistente "+getContenido()+" en la linea: "+linea, log);
             }
-
             match(Tipos.Identificador);
-            if(getContenido() == "+")
+            if(getContenido() == "++")
             {
                 match("++");
                 modVariable(variable, getValor(variable)+1);
@@ -385,14 +400,19 @@ namespace Evalua
         //Printf -> printf(cadena|expresion);
         private void Printf()
         {
+
             match("printf");
             match("(");
+
+            //revisamos si es una cadena
             if(getClasificacion() == Tipos.Cadena){
                 
                 //cambiamos las comillas por los datos correctos
                 setContenido(getContenido().Replace("\\t","     "));
                 setContenido(getContenido().Replace("\\n","\n"));
                 setContenido(getContenido().Replace("\"",string.Empty));
+                
+
                 //escribe contenido
                 Console.Write(getContenido());
                 match(Tipos.Cadena);
@@ -411,13 +431,23 @@ namespace Evalua
         {
             match("scanf");
             match("(");
-            
             match(Tipos.Cadena);
             match(",");
             match("&");
+            //revisamos si es un identificador
+            if (getClasificacion() == Tipos.Identificador)
+            {
+                //si no existe la variable, mandamos un error
+                if (!existeVariable(getContenido()))
+                {
+                    throw new Error("Error de sintaxis, variable solicitada:  <" +getContenido()+"> es inexistente, en linea: "+linea, log);
+                }
+                
+            }
             //requerimiento 2.- Si no existe la variable levanta la excepcion
             string val = ""+Console.ReadLine();
-
+            //Requerimiento 5.- Modificar el valor de la variable en el scanf 
+            modVariable(getContenido(),float.Parse(val));
             match(Tipos.Identificador);
             match(")");
             match(";");
@@ -497,14 +527,19 @@ namespace Evalua
                 log.Write(getContenido() + " " );
                 stack.Push(float.Parse(getContenido()));
                 match(Tipos.Numero);
-
-
             }
             else if (getClasificacion() == Tipos.Identificador)
             {
+                //si no existe la variable, mandamos un error
+                if (!existeVariable(getContenido()))
+                {
+                    throw new Error("Error de sintaxis, variable solicitada:  <" +getContenido()+"> es inexistente, en linea: "+linea, log);
+                }
                 //Requerimiento 2.- Si no existe la variable levanta la excepcion
                 log.Write(getContenido() + " " );
+                //metemos la variable dentro del stack para hacer operaciones 
                 stack.Push(getValor(getContenido()));
+                //pasamos al siguiente token
                 match(Tipos.Identificador);
             }
             else
