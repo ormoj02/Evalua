@@ -65,7 +65,6 @@ namespace Evalua
                 }
             }
         }
-
         private float getValor(string nombreVariable)
         {
             foreach (Variable v in variables)
